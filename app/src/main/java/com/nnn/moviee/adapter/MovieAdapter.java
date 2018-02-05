@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nnn.moviee.R;
 import com.nnn.moviee.activity.MovieActivity;
 import com.nnn.moviee.model.Movie;
@@ -87,7 +88,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             textYear.setText(movie.getReleaseYear());
             textRating.setText(movie.getRating());
 
-            Glide.with(ctx).load(movie.getPosterPath185()).into(poster);
+
+            RequestOptions myOptions = new RequestOptions()
+                    .placeholder(R.color.lightGrey);
+            Glide.with(ctx)
+                    .load(movie.getPosterPath185())
+                    .apply(myOptions)
+                    .into(poster);
 
         }
 

@@ -14,6 +14,12 @@ public interface MovieApi {
     @GET("movie/popular")
     Call<ListMovieResponse> getPopularMovies();
 
+    @GET("movie/now_playing")
+    Call<ListMovieResponse> getPlaying();
+
+    @GET("movie/upcoming")
+    Call<ListMovieResponse> getUpcoming();
+
     @GET("search/movie")
     Call<ListMovieResponse> getSearch(@Query("query") String query);
 }
