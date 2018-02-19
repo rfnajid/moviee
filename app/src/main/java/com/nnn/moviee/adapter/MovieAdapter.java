@@ -1,6 +1,7 @@
 package com.nnn.moviee.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,7 +101,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
         @OnClick(R.id.btn)
         public void intentCall(){
-            S.goTo(ctx, MovieActivity.class,movie);
+            Bundle b = new Bundle();
+            b.putLong("id",movie.getId());
+            b.putString("title",movie.getTitle());
+            b.putString("posterPath",movie.getPosterPath());
+            b.putString("overview",movie.getOverview());
+            b.putString("releaseDate",movie.getReleaseDate());
+            b.putString("rating",movie.getRating());
+
+            S.goTo(ctx, MovieActivity.class,b);
         }
 
     }

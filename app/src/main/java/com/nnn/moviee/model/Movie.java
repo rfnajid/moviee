@@ -2,14 +2,18 @@ package com.nnn.moviee.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by ridhaaaaazis on 26/01/18.
  */
 
-public class Movie implements Serializable{
-    int id;
+public class Movie extends RealmObject {
+
+
+    @PrimaryKey
+    long id;
     String title;
     @SerializedName("poster_path")
     String posterPath;
@@ -19,7 +23,10 @@ public class Movie implements Serializable{
     @SerializedName("vote_average")
     String rating;
 
-    public Movie(int id, String title, String posterPath, String overview, String releaseDate, String rating) {
+    public Movie() {
+    }
+
+    public Movie(long id, String title, String posterPath, String overview, String releaseDate, String rating) {
         this.id = id;
         this.title = title;
         this.posterPath = posterPath;
@@ -28,11 +35,11 @@ public class Movie implements Serializable{
         this.rating = rating;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

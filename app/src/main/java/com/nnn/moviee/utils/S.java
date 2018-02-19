@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
@@ -51,6 +52,13 @@ public class S {
         Intent i = new Intent(ctx, cls);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra("extra", s);
+        ctx.startActivity(i);
+    }
+
+    public static void goTo(Context ctx, Class cls, Parcelable p) {
+        Intent i = new Intent(ctx, cls);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.putExtra("extra", p);
         ctx.startActivity(i);
     }
 

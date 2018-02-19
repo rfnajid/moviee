@@ -136,6 +136,10 @@ public class MainActivity extends AppCompatActivity
                 fragment= ListFragment.newInstance(ListFragment.TYPE.SEARCH);
                 title = getString(R.string.nav_search);
                 break;
+            case R.id.nav_favorite :
+                fragment = ListFragment.newInstance(ListFragment.TYPE.FAVORITE);
+                title = "Favorite";
+                break;
             case R.id.nav_settings :
                 fragment = new SettingFragment();
                 title = getString(R.string.nav_settings);

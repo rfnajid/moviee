@@ -14,12 +14,14 @@ import com.nnn.moviee.api.MovieApi;
 import com.nnn.moviee.model.Movie;
 import com.nnn.moviee.model.response.ListMovieResponse;
 import com.nnn.moviee.utils.S;
+import com.nnn.moviee.utils.db.DB;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,7 +88,20 @@ public class ListFragment extends Fragment {
 
         loadData();
 
+        S.log("oncreateview done");
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        S.log("On resume");
+
+        if(type==TYPE.FAVORITE)
+            loadFavorite();
     }
 
     void loadData() {
@@ -105,10 +120,14 @@ public class ListFragment extends Fragment {
                 else
                     call=movieApi.getPopularMovies();
                 break;
-            case FAVORITE:
-                break;
+            default: return;
         }
 
+        execCall(call);
+
+    }
+
+    void execCall(Call<ListMovieResponse> call){
         call.enqueue(new Callback<ListMovieResponse>() {
             @Override
             public void onResponse(Call<ListMovieResponse> call, Response<ListMovieResponse> response) {
@@ -128,5 +147,15 @@ public class ListFragment extends Fragment {
                 S.toast(getContext(),"Unexpected Error");
             }
         });
+    }
+
+    void loadFavorite(){
+        S.log("Load Favorite");
+        Realm realm = Realm.getDefaultInstance();
+        movieList.clear();
+        movieList.addAll(DB.getFavorites(realm));
+        movieAdapter.notifyDataSetChanged();
+
+        S.log("count : "+ DB.getFavorites(realm).size());
     }
 }
