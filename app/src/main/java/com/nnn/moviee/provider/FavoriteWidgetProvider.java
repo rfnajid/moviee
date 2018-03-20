@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 
 import com.nnn.moviee.R;
 import com.nnn.moviee.activity.MovieActivity;
+import com.nnn.moviee.model.Movie;
 import com.nnn.moviee.service.StackWidgetService;
 import com.nnn.moviee.utils.S;
 
@@ -21,13 +22,14 @@ public class FavoriteWidgetProvider extends AppWidgetProvider {
 
     public static final String ACTION_OPEN = "OPEN";
 
+
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
         Intent intent = new Intent(context, StackWidgetService.class);
 
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.favorite_widget);
 
@@ -40,9 +42,9 @@ public class FavoriteWidgetProvider extends AppWidgetProvider {
         openIntent.setAction(FavoriteWidgetProvider.ACTION_OPEN);
         openIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-        PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, 0, openIntent,
+        PendingIntent openPendingIntent = PendingIntent.getBroadcast(context, 0, openIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setPendingIntentTemplate(R.id.stack_view, toastPendingIntent);
+        views.setPendingIntentTemplate(R.id.stack_view, openPendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -59,8 +61,24 @@ public class FavoriteWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
         if (intent.getAction().equals(ACTION_OPEN)) {
-            Bundle bundle = intent.getExtras();
-            S.goTo(context, MovieActivity.class,bundle);
+            Bundle b = intent.getExtras();
+
+            Movie m = new Movie(
+                    b.getLong("id"),
+                    b.getString("title"),
+                    b.getString("posterPath"),
+                    b.getString("overview"),
+                    b.getString("releaseDate"),
+                    b.getString("rating")
+            );
+
+            S.goTo(context, MovieActivity.class,m);
+        }else if(intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)){
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            int[] ids = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+            S.log("gonna update widget");
+            appWidgetManager.notifyAppWidgetViewDataChanged(ids,R.id.stack_view);
+
         }
         super.onReceive(context, intent);
 

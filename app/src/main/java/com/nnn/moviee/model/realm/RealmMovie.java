@@ -1,15 +1,19 @@
-package com.nnn.moviee.model;
+package com.nnn.moviee.model.realm;
 
 import com.google.gson.annotations.SerializedName;
-import com.nnn.moviee.model.realm.RealmMovie;
+import com.nnn.moviee.model.Movie;
 
-import java.io.Serializable;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by ridhaaaaazis on 19/03/18.
+ * Created by ridhaaaaazis on 26/01/18.
  */
 
-public class Movie implements Serializable{
+public class RealmMovie extends RealmObject{
+
+
+    @PrimaryKey
     long id;
     String title;
     @SerializedName("poster_path")
@@ -20,21 +24,21 @@ public class Movie implements Serializable{
     @SerializedName("vote_average")
     String rating;
 
-    public Movie() {
+    public RealmMovie() {
     }
 
-    public Movie(RealmMovie realmMovie){
+    public RealmMovie(Movie movie){
         this(
-                realmMovie.getId(),
-                realmMovie.getTitle(),
-                realmMovie.getPosterPath(),
-                realmMovie.getOverview(),
-                realmMovie.getReleaseDate(),
-                realmMovie.getRating()
+                movie.getId(),
+                movie.getTitle(),
+                movie.getPosterPath(),
+                movie.getOverview(),
+                movie.getReleaseDate(),
+                movie.getRating()
         );
     }
 
-    public Movie(long id, String title, String posterPath, String overview, String releaseDate, String rating) {
+    public RealmMovie(long id, String title, String posterPath, String overview, String releaseDate, String rating) {
         this.id = id;
         this.title = title;
         this.posterPath = posterPath;
@@ -102,4 +106,5 @@ public class Movie implements Serializable{
     public void setRating(String rating) {
         this.rating = rating;
     }
+
 }

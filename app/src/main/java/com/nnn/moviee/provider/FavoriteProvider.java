@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.nnn.moviee.model.Movie;
+import com.nnn.moviee.model.realm.RealmMovie;
 import com.nnn.moviee.utils.db.DB;
 
 import java.util.List;
@@ -50,13 +50,13 @@ public class FavoriteProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Realm realm= Realm.getDefaultInstance();
-        List<Movie> list= DB.getFavorites(realm);
+        List<RealmMovie> list= DB.getFavorites(realm);
 
         MatrixCursor cursor = new MatrixCursor(new String[]{
                 "id","title","posterPath","overview","releaseDate","rating"
         });
 
-        for (Movie m : list){
+        for (RealmMovie m : list){
             cursor.newRow()
                     .add("id",m.getId())
                     .add("title",m.getTitle())

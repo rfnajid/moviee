@@ -11,4 +11,16 @@
         android:entryValues="@array/pref_language_key"
         />
 
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:key="@string/key_daily"
+        android:title="@string/title_daily"
+        android:summary="@string/summary_daily"
+        android:defaultValue="true" />
+
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:key="@string/key_today"
+        android:title="@string/title_today"
+        android:summary="@string/summary_today"
+        android:defaultValue="true" />
+
 </android.support.v7.preference.PreferenceScreen>

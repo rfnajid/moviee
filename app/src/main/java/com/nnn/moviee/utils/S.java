@@ -1,5 +1,8 @@
 package com.nnn.moviee.utils;
 
+import android.app.Application;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,10 +13,16 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.nnn.moviee.provider.FavoriteWidgetProvider;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -154,6 +163,37 @@ public class S {
 
     public static void log(String message){
         Log.d(TAG,message);
+    }
+
+    public static void updateWidget(Application app){
+        S.log("widget update triggered");
+        Intent intent = new Intent(app.getApplicationContext(),FavoriteWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(app)
+                .getAppWidgetIds(new ComponentName(app,FavoriteWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        app.sendBroadcast(intent);
+    }
+
+    public static boolean isStringToday(String stringDate){
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = inputFormat.parse(stringDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            S.log("DateFormat Error");
+        }
+
+        Calendar today = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        boolean sameDay =
+                today.get(Calendar.YEAR) == cal.get(Calendar.YEAR) &&
+                today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR);
+
+        return sameDay;
     }
 }
 

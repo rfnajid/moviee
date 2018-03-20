@@ -1,6 +1,8 @@
 package com.nnn.moviee.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +14,14 @@ import com.nnn.moviee.R;
 import com.nnn.moviee.adapter.MovieAdapter;
 import com.nnn.moviee.api.MovieApi;
 import com.nnn.moviee.model.Movie;
+import com.nnn.moviee.model.realm.RealmMovie;
 import com.nnn.moviee.model.response.ListMovieResponse;
 import com.nnn.moviee.utils.S;
 import com.nnn.moviee.utils.db.DB;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,6 +33,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ListFragment extends Fragment {
+
+    Bundle savedState=null;
+    boolean saved=false;
 
     public enum TYPE {
         PLAYING,
@@ -44,6 +52,7 @@ public class ListFragment extends Fragment {
 
     MovieAdapter movieAdapter;
     List<Movie> movieList;
+    LinearLayoutManager llm;
 
     Retrofit retrofit;
     MovieApi movieApi;
@@ -64,10 +73,25 @@ public class ListFragment extends Fragment {
         loadData();
     }
 
+    Bundle saveState(){
+        Bundle state = new Bundle();
+        state.putSerializable("data", (Serializable) movieList);
+        state.putSerializable("type",type);
+        return state;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        movieList=new ArrayList<>();
+        movieAdapter = new MovieAdapter(movieList);
+        llm = new LinearLayoutManager(getContext());
+    }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("state", (savedState != null) ? savedState : saveState());
     }
 
     @Override
@@ -77,20 +101,33 @@ public class ListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, view);
 
-        movieList = new ArrayList<>();
-        movieAdapter = new MovieAdapter(movieList);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
         recyclerView.setAdapter(movieAdapter);
         recyclerView.setLayoutManager(llm);
 
-        retrofit = S.getRetrofit();
-        movieApi = retrofit.create(MovieApi.class);
+        return view;
+    }
 
-        loadData();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState!=null && savedState==null){
+            savedState = savedInstanceState.getBundle("state");
+        }
+
+
+        if(savedState!=null){
+            type=(TYPE) savedState.getSerializable("type");
+            movieList.clear();
+            movieList.addAll((Collection<? extends Movie>) savedState.getSerializable("data"));
+            movieAdapter.notifyDataSetChanged();
+        }else if(movieList.size()<=0){
+            retrofit = S.getRetrofit();
+            movieApi = retrofit.create(MovieApi.class);
+            loadData();
+        }
 
         S.log("oncreateview done");
-
-        return view;
     }
 
     @Override
@@ -100,8 +137,17 @@ public class ListFragment extends Fragment {
 
         S.log("On resume");
 
-        if(type==TYPE.FAVORITE)
+        if(type==TYPE.FAVORITE) {
             loadFavorite();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        savedState = saveState();
+        movieList=null;
+        type=null;
     }
 
     void loadData() {
@@ -153,7 +199,9 @@ public class ListFragment extends Fragment {
         S.log("Load Favorite");
         Realm realm = Realm.getDefaultInstance();
         movieList.clear();
-        movieList.addAll(DB.getFavorites(realm));
+        for(RealmMovie rm : DB.getFavorites(realm)){
+            movieList.add(new Movie(rm));
+        }
         movieAdapter.notifyDataSetChanged();
 
         S.log("count : "+ DB.getFavorites(realm).size());

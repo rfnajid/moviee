@@ -13,4 +13,15 @@
         <item>Bahasa Indonesia</item>
     </string-array>
     <string name="pref_language_summary">Bahasa Indonesia</string>
+
+    <string name="daily_content">Kangen kamu nih!</string>
+    <string name="daily_subtitle">Banyak update film terbaru</string>
+
+    <string name="today_content">tayang hari ini</string>
+    <string name="today_subtitle">Klik disini untuk lebih detailnya</string>
+    <string name="title_daily">Pengingat Harian</string>
+    <string name="summary_daily">Pengingat harian biasa yang menggangu</string>
+    <string name="widget_empty">Tidak ada data</string>
+    <string name="title_today">Pemberitahuan Film Baru</string>
+    <string name="summary_today">Kamu akan diberitahu kalau ada film baru yang rilis hari ini</string>
 </resources>

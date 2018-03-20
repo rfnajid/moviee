@@ -25,6 +25,23 @@
         <item>1</item>
     </string-array>
 
+    <string name="key_daily" translatable="false">pref_daily</string>
+    <string name="title_daily">Daily Reminder</string>
+    <string name="summary_daily">Just daily annoying notification</string>
+
+    <string name="key_today" translatable="false">pref_today</string>
+    <string name="title_today">New Movies Notification</string>
+    <string name="summary_today">You\'ll be notified when new movies released today</string>
+
     <string name="widget_empty">NO DATA</string>
+
+    <string name="daily_title" translatable="false">Moviee</string>
+    <string name="daily_content">We miss you!</string>
+    <string name="daily_subtitle">There are a lot upcoming movies</string>
+
+    <string name="today_title" translatable="false">TITLE</string>
+    <string name="today_content">is released today</string>
+    <string name="today_subtitle">Click for detail</string>
+
 
 </resources>

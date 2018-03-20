@@ -41,10 +41,15 @@ public class StackRemoteViewsFactory implements
     }
 
     public void onCreate() {
-        Cursor cursor = context.getContentResolver().query(CONTENT_URI,null,null,null,null);
+        S.log("STACK REMOTE CREATE ");
+        //onDataSetChanged();
 
-        S.log(CONTENT_URI+"");
-        S.log("cursor count : "+cursor.getCount());
+    }
+
+    @Override
+    public void onDataSetChanged() {
+        S.log("ON DATA SET CHANGED");
+        Cursor cursor = context.getContentResolver().query(CONTENT_URI,null,null,null,null);
 
         widgetItems.clear();
         while (cursor.moveToNext()){
@@ -63,11 +68,6 @@ public class StackRemoteViewsFactory implements
     }
 
     @Override
-    public void onDataSetChanged() {
-
-    }
-
-    @Override
     public void onDestroy() {
 
     }
@@ -80,15 +80,10 @@ public class StackRemoteViewsFactory implements
     @Override
     public RemoteViews getViewAt(int position) {
 
-        S.log("widget : getviewat");
-
         Movie movie = widgetItems.get(position);
-        S.log("widget fav : "+position);
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.item_widget);
 
-        rv.setTextViewText(R.id.widget_text,movie.getTitle());
-
-        S.log("widget : set title : "+movie.getTitle());
+        rv.setTextViewText(R.id.widget_text, movie.getTitle());
 
         try {
             Bitmap bitmap = Glide.with(context)
@@ -104,9 +99,6 @@ public class StackRemoteViewsFactory implements
             e.printStackTrace();
         }
 
-
-        S.log("widget : set image "+movie.getPosterPath());
-
         Bundle b = new Bundle();
         b.putLong("id",movie.getId());
         b.putString("title",movie.getTitle());
@@ -117,8 +109,6 @@ public class StackRemoteViewsFactory implements
 
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(b);
-
-        S.log("widget : set bundle");
 
         rv.setOnClickFillInIntent(R.id.widget_image, fillInIntent);
         return rv;
@@ -143,6 +133,7 @@ public class StackRemoteViewsFactory implements
     public boolean hasStableIds() {
         return false;
     }
+
 
 
 }

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.nnn.moviee.R;
 import com.nnn.moviee.model.Movie;
+import com.nnn.moviee.model.realm.RealmMovie;
+import com.nnn.moviee.utils.S;
 import com.nnn.moviee.utils.db.DB;
 
 import butterknife.BindView;
@@ -19,7 +21,7 @@ import io.realm.Realm;
 
 public class MovieActivity extends BackButtonActivity {
 
-    Movie movie;
+    RealmMovie realmMovie;
 
     @BindView(R.id.text_title)
     TextView textTitle;
@@ -50,42 +52,38 @@ public class MovieActivity extends BackButtonActivity {
         ButterKnife.bind(this);
 
         Intent i = getIntent();
-        Bundle b = i.getExtras();
-        movie = new Movie(
-                b.getLong("id"),
-                b.getString("title"),
-                b.getString("posterPath"),
-                b.getString("overview"),
-                b.getString("releaseDate"),
-                b.getString("rating")
-        );
+        realmMovie = new RealmMovie((Movie)i.getSerializableExtra("extra"));
 
         realm = Realm.getDefaultInstance();
-        isFavorite = DB.isFavorite(realm,movie);
+        isFavorite = DB.isFavorite(realm, realmMovie);
 
         updateView();
     }
 
     void updateView(){
-        textTitle.setText(movie.getTitle());
-        textOverview.setText(movie.getOverview());
-        textDate.setText(movie.getReleaseDate());
-        textRating.setText(movie.getRating());
+        textTitle.setText(realmMovie.getTitle());
+        textOverview.setText(realmMovie.getOverview());
+        textDate.setText(realmMovie.getReleaseDate());
+        textRating.setText(realmMovie.getRating());
 
         setFavoriteLayout();
 
-        Glide.with(this).load(movie.getPosterPath500()).into(poster);
+        Glide.with(this).load(realmMovie.getPosterPath500()).into(poster);
     }
 
     @OnClick(R.id.img_favorite)
     void clickFavorite(){
         if(isFavorite)
-            DB.removeFavorite(realm,movie);
+            DB.removeFavorite(realm, realmMovie);
         else
-            DB.addFavorite(realm,movie);
+            DB.addFavorite(realm, realmMovie);
 
         isFavorite=!isFavorite;
         setFavoriteLayout();
+
+        S.log("FAV SIZE : "+DB.getFavorites(realm).size());
+
+        S.updateWidget(getApplication());
     }
 
     void setFavoriteLayout(){
@@ -94,4 +92,6 @@ public class MovieActivity extends BackButtonActivity {
             drawableFavorite = ContextCompat.getDrawable(this,R.drawable.ic_favorite_black_24dp);
         favorite.setImageDrawable(drawableFavorite);
     }
+
+
 }

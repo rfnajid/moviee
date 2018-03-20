@@ -2,7 +2,7 @@ package com.nnn.moviee.utils.db;
 
 import android.content.Context;
 
-import com.nnn.moviee.model.Movie;
+import com.nnn.moviee.model.realm.RealmMovie;
 
 import java.util.List;
 
@@ -28,31 +28,30 @@ public class DB {
         Realm.setDefaultConfiguration(realmConfig);
     }
 
-    public static List<Movie> getFavorites(Realm realm){
+    public static List<RealmMovie> getFavorites(Realm realm){
 
-        RealmQuery<Movie> query = realm.where(Movie.class);
-        RealmResults<Movie> realmResult = query.findAll();
+        RealmQuery<RealmMovie> query = realm.where(RealmMovie.class);
+        RealmResults<RealmMovie> realmResult = query.findAll();
 
         return realmResult.subList(0,realmResult.size());
 
     }
 
-    public static void addFavorite(Realm realm, Movie movie){
+    public static void addFavorite(Realm realm, RealmMovie realmMovie){
         realm.beginTransaction();
-        realm.insert(movie);
+        realm.insert(realmMovie);
         realm.commitTransaction();
     }
 
-    public static void removeFavorite(Realm realm,Movie movie){
+    public static void removeFavorite(Realm realm,RealmMovie realmMovie){
         realm.beginTransaction();
-        realm.where(Movie.class).equalTo("id",movie.getId()).findAll().deleteAllFromRealm();
+        realm.where(RealmMovie.class).equalTo("id", realmMovie.getId()).findAll().deleteAllFromRealm();
         realm.commitTransaction();
-
     }
 
-    public static boolean isFavorite(Realm realm, Movie movie){
-        Movie m = realm.where(Movie.class).equalTo("id",movie.getId()).findFirst();
-        return m==null?false:true;
+    public static boolean isFavorite(Realm realm, RealmMovie realmMovie){
+        RealmMovie m = realm.where(RealmMovie.class).equalTo("id", realmMovie.getId()).findFirst();
+        return m != null;
     }
 
 }

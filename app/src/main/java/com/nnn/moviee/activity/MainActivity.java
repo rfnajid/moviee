@@ -21,6 +21,7 @@ import com.nnn.moviee.fragment.ListFragment;
 import com.nnn.moviee.fragment.SettingFragment;
 import com.nnn.moviee.utils.S;
 import com.nnn.moviee.utils.db.Pref;
+import com.nnn.moviee.utils.reminder.ReminderHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity
 
     MenuItem searchItem;
 
+    Fragment fragment=null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +60,11 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-    }
+        S.updateWidget(getApplication());
 
+        ReminderHelper.createDailyReminder(this);
+        ReminderHelper.createTodayReminder(this);
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -117,7 +124,6 @@ public class MainActivity extends AppCompatActivity
 
     void selectFragment(int id){
 
-        Fragment fragment = null;
         String title = "Moviee";
 
         searchItem.setVisible(false);
@@ -155,6 +161,7 @@ public class MainActivity extends AppCompatActivity
         }
         drawer.closeDrawer(GravityCompat.START);
     }
+
 
 
 }

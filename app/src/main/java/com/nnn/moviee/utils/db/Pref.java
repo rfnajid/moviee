@@ -45,9 +45,9 @@ public class Pref {
         editor.commit();
     }
 
-    public static boolean getBoolean(Context ctx,String key){
+    public static boolean getBoolean(Context ctx,String key,boolean def){
         SharedPreferences pref = get(ctx);
-        return pref.getBoolean(key,false);
+        return pref.getBoolean(key,def);
     }
 
     public static void loadLocale(Context ctx){
@@ -65,6 +65,14 @@ public class Pref {
         Configuration config = ctx.getResources().getConfiguration();
         config.locale = locale;
         ctx.getResources().updateConfiguration(config, ctx.getResources().getDisplayMetrics());
+    }
+
+    public static boolean getDaily(Context ctx){
+        return getBoolean(ctx,ctx.getString(R.string.key_daily),true);
+    }
+
+    public static boolean getToday(Context ctx){
+        return getBoolean(ctx,ctx.getString(R.string.key_today),true);
     }
 
 /*
